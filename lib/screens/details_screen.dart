@@ -251,7 +251,7 @@ class DetailsScreen extends StatelessWidget {
                       duration: Toast.LENGTH_SHORT,
                       gravity: Toast.BOTTOM,
                     );
-                    Navigator.of(context).popAndPushNamed('/');
+                    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                   },
                 ),
               ],
