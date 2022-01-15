@@ -75,12 +75,14 @@ class _AddScreenState extends State<AddScreen> {
                 CustomTextFormField(
                   label: 'Title',
                   hint: 'Enter Title ',
+                  linesNumber: 1,
                   justRead: false,
                   onSave: (value) {
-                    title = value;
+                    title = value.toString().trimLeft();
                   },
                   validate: (value) {
-                    if (value == '') {
+                    String val = value.toString().trimLeft();
+                    if (val == '') {
                       return 'Title can not be Empty ';
                     }
                     return null;
@@ -93,13 +95,15 @@ class _AddScreenState extends State<AddScreen> {
                   label: 'Description',
                   hint: 'Enter Description ',
                   justRead: false,
+                  keyboardType: TextInputType.text,
                   linesNumber: 4,
                   onSave: (value) {
-                    description = value;
+                    description = value.toString().trimLeft();
                   },
                   validate: (value) {
-                    if (value == '') {
-                      return 'Description can not be Empty ';
+                    String val = value.toString().trimLeft();
+                    if (val == '') {
+                      return 'Title can not be Empty ';
                     }
                     return null;
                   },
@@ -111,8 +115,12 @@ class _AddScreenState extends State<AddScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      height:  _isPortrait? mediaQueryHeight * 0.30: mediaQueryHeight * 0.70,
-                      width: _isPortrait? mediaQueryWidth*0.65: mediaQueryWidth*0.45,
+                      height: _isPortrait
+                          ? mediaQueryHeight * 0.30
+                          : mediaQueryHeight * 0.70,
+                      width: _isPortrait
+                          ? mediaQueryWidth * 0.65
+                          : mediaQueryWidth * 0.45,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           border: Border.all(
@@ -201,14 +209,16 @@ class _AddScreenState extends State<AddScreen> {
                 ),
                 Container(
                   width: mediaQueryWidth * 0.93,
-                  height:  _isPortrait?mediaQueryHeight * 0.06:mediaQueryHeight * 0.12,
+                  height: _isPortrait
+                      ? mediaQueryHeight * 0.06
+                      : mediaQueryHeight * 0.12,
                   child: ElevatedButton(
                     child: Text(
                       'Add Note',
                       style: TextStyle(fontSize: 20.0),
                     ),
                     onPressed: () {
-                      _validateForm( context);
+                      _validateForm(context);
                     },
                   ),
                 ),
@@ -240,7 +250,7 @@ class _AddScreenState extends State<AddScreen> {
     }
   }
 
-  void _validateForm( context ) {
+  void _validateForm(context) {
     bool _isValid = _formKey.currentState.validate();
     if (selectedStatus == null) {
       setState(() {
@@ -256,38 +266,41 @@ class _AddScreenState extends State<AddScreen> {
     }
     if (_isValid) {
       _formKey.currentState.save();
-         dbHelper.insert(context,ItemModel(
-          title: title,
-          id: id,
-          description: description,
-          status: selectedStatus,
-          date: DateTime.now(),
-          picture: usedPickedImage,
-        )).then((value){
-          if(value !=0){
-            Toast.show(
-              "${title.toUpperCase()} Note Added Successfully",
+      dbHelper
+          .insert(
               context,
-              duration: Toast.LENGTH_SHORT,
-              gravity: Toast.BOTTOM,
-            );
-            Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-          }else{
-            print('insert error');
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              duration: Duration(seconds:5),
-              backgroundColor: Colors.white.withOpacity(0.6),
-              elevation: 3.0,
-              padding: EdgeInsets.symmetric(vertical: 10.0 , horizontal: 5.0),
-              content: CustomText(
-                title: ' Id exist Try another one',fontSize: 18.0,
-                fontColor: Colors.black87,
-              ),
-            ));
-          }
-
-        });
-
+              ItemModel(
+                title: title,
+                id: id,
+                description: description,
+                status: selectedStatus,
+                date: DateTime.now(),
+                picture: usedPickedImage,
+              ))
+          .then((value) {
+        if (value != 0) {
+          Toast.show(
+            "${title.toUpperCase()} Note Added Successfully",
+            context,
+            duration: Toast.LENGTH_SHORT,
+            gravity: Toast.BOTTOM,
+          );
+          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+        } else {
+          print('insert error');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: Duration(seconds: 5),
+            backgroundColor: Colors.white.withOpacity(0.6),
+            elevation: 3.0,
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+            content: CustomText(
+              title: ' Id exist Try another one',
+              fontSize: 18.0,
+              fontColor: Colors.black87,
+            ),
+          ));
+        }
+      });
     }
   }
 }

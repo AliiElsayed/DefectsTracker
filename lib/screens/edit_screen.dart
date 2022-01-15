@@ -64,13 +64,15 @@ class _EditScreenState extends State<EditScreen> {
                 CustomTextFormField(
                   label: 'Title',
                   hint: 'Enter Title ',
+                  linesNumber: 1,
                   justRead: false,
                   initalVal: widget.model.title,
                   onSave: (value) {
-                    widget.model.title = value;
+                    widget.model.title = value.toString().trimLeft();
                   },
                   validate: (value) {
-                    if (value == '') {
+                    String val = value.toString().trimLeft();
+                    if (val == '') {
                       return 'Title can not be Empty ';
                     }
                     return null;
@@ -84,12 +86,14 @@ class _EditScreenState extends State<EditScreen> {
                   hint: 'Enter Description ',
                   initalVal: widget.model.description,
                   justRead: false,
+                  keyboardType: TextInputType.text,
                   linesNumber: 4,
                   onSave: (value) {
-                    widget.model.description = value;
+                    widget.model.description = value.toString().trimLeft();
                   },
                   validate: (value) {
-                    if (value == '') {
+                    String val = value.toString().trimLeft();
+                    if (val == '') {
                       return 'Description can not be Empty ';
                     }
                     return null;
@@ -200,7 +204,8 @@ class _EditScreenState extends State<EditScreen> {
                           duration: Toast.LENGTH_SHORT,
                           gravity: Toast.BOTTOM,
                         );
-                        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil('/', (route) => false);
                       }
                     },
                   ),
